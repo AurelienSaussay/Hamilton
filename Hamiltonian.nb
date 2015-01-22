@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     64986,       1583]
-NotebookOptionsPosition[     64282,       1555]
-NotebookOutlinePosition[     64653,       1571]
-CellTagsIndexPosition[     64610,       1568]
+NotebookDataLength[     65516,       1595]
+NotebookOptionsPosition[     64812,       1567]
+NotebookOutlinePosition[     65183,       1583]
+CellTagsIndexPosition[     65140,       1580]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -468,7 +468,9 @@ Cell[BoxData[{
          "}"}], "]"}], "/.", "RuleToEquation"}]}], "]"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"Clear", "[", "Hamilton", "]"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Clear", "[", "Hamilton", "]"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"Hamilton", "::", "badoutput"}], "=", 
@@ -476,10 +478,19 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"Hamilton", "::", "badmultipliers"}], "=", 
-   "\"\<Incorrect number of multipliers provided. `1` expected, `2` received. \
-Reverting to default choice of multipliers\>\""}], 
-  ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Hamilton", "::", "badmultipliers"}], "=", 
+    "\"\<Incorrect number of multipliers provided. `1` expected, `2` \
+received. Reverting to default choice of multipliers\>\""}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Hamilton", "::", "usage"}], "=", 
+    "\"\<Hamilton[objective, constraints, Output -> \\\"Full\\\", Multipliers \
+-> {}] automatically derives the first order conditions for a standard \
+economics continuous dynamic optimization problem.\>\""}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"Hamilton", "[", 
@@ -743,7 +754,8 @@ Reverting to default choice of multipliers\>\""}],
    3.6309300926798687`*^9, 3.6309300996072645`*^9}, {3.630930133502204*^9, 
    3.6309301425547214`*^9}, {3.6309301795228357`*^9, 3.630930189796424*^9}, {
    3.6309302505028954`*^9, 3.6309303000117273`*^9}, {3.630930335445754*^9, 
-   3.63093033694884*^9}}],
+   3.63093033694884*^9}, {3.630930908331521*^9, 3.6309309831888027`*^9}, {
+   3.6309310512966986`*^9, 3.630931080747383*^9}}],
 
 Cell[CellGroupData[{
 
@@ -1570,20 +1582,20 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[557, 20, 31946, 725, 2272, "Input",
+Cell[557, 20, 32476, 737, 2412, "Input",
  InitializationCell->True],
 Cell[CellGroupData[{
-Cell[32528, 749, 3836, 91, 192, "Input"],
-Cell[36367, 842, 8131, 212, 370, "Output"]
+Cell[33058, 761, 3836, 91, 192, "Input"],
+Cell[36897, 854, 8131, 212, 370, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[44535, 1059, 2751, 71, 212, "Input"],
-Cell[47289, 1132, 7605, 189, 375, "Output"]
+Cell[45065, 1071, 2751, 71, 212, "Input"],
+Cell[47819, 1144, 7605, 189, 375, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[54931, 1326, 2075, 49, 198, "Input"],
-Cell[57009, 1377, 822, 15, 21, "Message"],
-Cell[57834, 1394, 6432, 158, 316, "Output"]
+Cell[55461, 1338, 2075, 49, 198, "Input"],
+Cell[57539, 1389, 822, 15, 21, "Message"],
+Cell[58364, 1406, 6432, 158, 316, "Output"]
 }, Open  ]]
 }
 ]
