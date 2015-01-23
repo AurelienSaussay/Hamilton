@@ -67,3 +67,15 @@ _, Message[Hamilton::badoutput, format];full]
 End[]
 
 EndPackage[]
+
+
+Hamilton[u[Sum[Subscript[q, i][t],i]]-Sum[Subscript[c, i][Subscript[x, i][t]],i],
+{Subscript[k, i]'[t]==Subscript[x, i][t]-\[Delta] Subscript[k, i][t],
+Subscript[q, i][t]<=Subscript[k, i][t],
+Subscript[q, i][t]>=0,
+m'[t]==Sum[Subscript[F, i]  Subscript[q, i][t],i],
+m[t]<=
+\!\(\*OverscriptBox[\(M\), \(_\)]\),
+Subscript[S, i]'[t]==- Subscript[q, i][t],
+Subscript[S, i][t]>=0
+},Output->"Hamiltonian", Multipliers-> {Subscript[\[Nu], i],Subscript[\[Gamma], i],Subscript[\[Lambda], i],\[Mu],\[Eta],Subscript[\[Alpha], i],Subscript[\[Beta], i]}]
