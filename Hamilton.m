@@ -3,6 +3,10 @@
 BeginPackage["`Hamilton`"]
 
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
+t::usage="Time variable used by the Hamilton package";
+\[Rho]::usage="Discount rate used by the Hamilton package";
+\[Rho]t::usage="Discount factor used by the Hamilton package";
+max::usage="Maximization operator used by the Hamilton package";
 
 Begin["`Private`"]
 
@@ -14,7 +18,7 @@ MakeBoxes[bracket[obj_],fmt_]:=StyleBox[RowBox[{"{",obj~ToBoxes~fmt}],SpanMaxSiz
 
 greeks =Complement[CharacterRange["\[Alpha]", "\[Omega]"],{"\[Delta]","\[CurlyEpsilon]","\[Zeta]","\[Theta]","\[Kappa]","\[Iota]","\[Omicron]","\[Pi]","\[Rho]","\[Sigma]","\[FinalSigma]","\[Tau]","\[Upsilon]","\[Omega]"}];
 
-ToTimeFunction[lst_]:=Replace[lst,(x_)->x[t],2];
+ToTimeFunction[lst0_]:=Module[{lst=lst0},Function[s,s/.x_->x[t]]/@lst];
 
 RuleToEquation:=(lhs_->rhs_)->(lhs==rhs);
 
@@ -43,13 +47,13 @@ Hamilton::badmultipliers="Incorrect number of multipliers provided. `1` expected
 
 Hamilton[obj0_,eqs0_,OptionsPattern[{Output->"Full",Multipliers->{}}]]:=Module[{obj=obj0,eqs=eqs0,format=OptionValue[Output],multipliers=OptionValue[Multipliers]},
 If[Length[multipliers]>0&&Length[multipliers]!=Length[eqs],Message[Hamilton::badmultipliers,Length[eqs],Length[multipliers]]];
+(*t0=Cases[u[c[t]],t,{0,Infinity}][[1]];*)
 h=Hamiltonian[obj,eqs,multipliers];
 foc=HamiltonianFOC@@Take[h, {1, 4}];
 expObj=Exp[-\[Rho]t]obj;
-multipliersInOrder=h[[5]]/.f_[t]:>"("~~ToString[f]~~")";
+multipliersInOrder=h[[5]]/.f_[t]:>Row[{"(",f,")"}];
 full=Style[Grid[{
 {Row[{max,Integrate[expObj,{t,0,Infinity}]}],SpanFromLeft},
-{Spacer[{10,10}],SpanFromLeft},
 {Item[Style["s.t.",Italic],Alignment->Top],Transpose[{eqs,multipliersInOrder}]//alignedMultiple//bracket},
 {SpanFromAbove,Spacer[{10,10}]},
 {Item[Style["FOC",Italic],Alignment->Top],foc//alignedEquations//bracket}
