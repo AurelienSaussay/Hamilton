@@ -4,6 +4,7 @@ BeginPackage["`Hamilton`"]
 
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
 t::usage="Time variable used by the Hamilton package";
+i::usage="Index that can be used as a subscript in the optimization problem";
 \[Rho]::usage="Discount rate used by the Hamilton package";
 \[Rho]t::usage="Discount factor used by the Hamilton package";
 max::usage="Maximization operator used by the Hamilton package";
@@ -22,19 +23,25 @@ ToTimeFunction[lst0_]:=Module[{lst=lst0},Function[s,s/.x_->x[t]]/@lst];
 
 RuleToEquation:=(lhs_->rhs_)->(lhs==rhs);
 
+buildProd[eqs_,multipliers_]:=MapAt[Sum[#,i]&, Apply[Function[{x,y},x y],#]&/@Transpose[{multipliers,eqs}], Position[multipliers,Subscript[_,_][t]]];
+
 Hamiltonian[obj0_,eqs0_,multipliers0_:{}]:=Module[{obj=obj0,eqs=eqs0,tmpMultipliers=multipliers0},
 multipliers=ToTimeFunction[If[Length[tmpMultipliers]==0,
 Take[greeks,{1,Length[eqs]}],
 tmpMultipliers]];
 vars=DeleteDuplicates[Cases[Prepend[eqs,obj],Except[_'[t],f_[t]],10]];
 
-states=Cases[eqs,f_'[t]==rhs_->f[t]];stateMultipliers=multipliers[[Sort[Flatten[Function[Position[eqs,#]]/@ Cases[eqs,f_'[t]==_]]]]];
+states=Cases[eqs,f_'[t]==rhs_->f[t]];
+stateMultipliers=multipliers[[Sort[Flatten[Function[Position[eqs,#]]/@ Cases[eqs,f_'[t]==_]]]]];
 stateEqs=Cases[eqs,_'[t]==_]/.f_'[t]==rhs_->rhs;
+
 
 controls=Complement[vars, states];
 controlMultipliers=multipliers[[Sort[Flatten[Function[Position[eqs,#]]/@Cases[eqs,Except[_'[t]==_]]]]]];
 controlEqs=Cases[eqs,Except[_'[t]==_]]/.{lhs_==rhs_->lhs-rhs,lhs_<rhs_->rhs-lhs,lhs_<=rhs_->rhs-lhs,lhs_>rhs_->lhs-rhs,lhs_>=rhs_->lhs-rhs};
-H=Exp[-\[Rho] t](obj+Fold[Plus,0,Join[Apply[Function[{x,y},x y],#]&/@Transpose[{stateMultipliers,stateEqs}],Apply[Function[{x,y},x y],#]&/@Transpose[{controlMultipliers,controlEqs}]]]);
+
+H=Exp[-\[Rho] t](obj+Fold[Plus,0,Join[buildProd[stateEqs,stateMultipliers],buildProd[controlEqs,controlMultipliers]]]);
+
 multipliersInOrder=ConstantArray[0,Length[eqs]];
 multipliersInOrder[[Flatten[Position[eqs,_'[t]==_,{1},Heads->False]]]]=stateMultipliers(*/.f_[t]\[Rule](f)*);
 multipliersInOrder[[Flatten[Position[eqs,Except[_'[t]==_],{1},Heads->False]]]]=controlMultipliers(*/.f_[t]\[Rule](f)*);
@@ -70,12 +77,8 @@ EndPackage[]
 
 
 Hamilton[u[Sum[Subscript[q, i][t],i]]-Sum[Subscript[c, i][Subscript[x, i][t]],i],
-{Subscript[k, i]'[t]==Subscript[x, i][t]-\[Delta] Subscript[k, i][t],
-Subscript[q, i][t]<=Subscript[k, i][t],
-Subscript[q, i][t]>=0,
-m'[t]==Sum[Subscript[F, i]  Subscript[q, i][t],i],
-m[t]<=
-\!\(\*OverscriptBox[\(M\), \(_\)]\),
-Subscript[S, i]'[t]==- Subscript[q, i][t],
-Subscript[S, i][t]>=0
-},Output->"Hamiltonian", Multipliers-> {Subscript[\[Nu], i],Subscript[\[Gamma], i],Subscript[\[Lambda], i],\[Mu],\[Eta],Subscript[\[Alpha], i],Subscript[\[Beta], i]}]
+{Subscript[k, i]'[t]==Subscript[x, i][t]-\[Delta] Subscript[k, i][t]
+},Output->"Hamiltonian", Multipliers-> {Subscript[\[Nu], i]}]
+
+
+
