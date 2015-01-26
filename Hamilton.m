@@ -47,7 +47,26 @@ multipliersInOrder[[Flatten[Position[eqs,_'[t]==_,{1},Heads->False]]]]=stateMult
 multipliersInOrder[[Flatten[Position[eqs,Except[_'[t]==_],{1},Heads->False]]]]=controlMultipliers(*/.f_[t]\[Rule](f)*);
 {H, controls, stateMultipliers,states,multipliersInOrder}];
 
-HamiltonianFOC[H0_,controls0_,costates0_,states0_]:=Module[{H=H0,controls=controls0,costates=costates0,states=states0},Flatten[{Simplify[Solve[D[H,#]==0][[1,1]]]&/@controls,Apply[Function[{x,y},Simplify[Solve[D[H,x]==-D[Exp[-\[Rho] t]y,t]][[1,1]]]],#]&/@Transpose[{states,costates}](*Apply[Function[{x,y},Simplify[Solve[D[H,x]\[Equal]-D[Exp[-\[Rho] t]y,t]][[1,1]]]],#]&/@Transpose[{states,costates}]*)}]/.RuleToEquation];
+(*Hackish solution to the differentiation of a finite symbolic sum
+  Transform the symbolic sum into an explicit sum with 100 elements,
+  differentiate wrt element 42, then identify the various terms to get back 
+  to the symbolic representation.*)
+DSum[f0_,y0_]:=Module[{f=f0,y=y0},
+expansionRule:=(Sum[e_,_]:>Fold[Plus,0,(e/.i->#)&/@Range[100]]);
+expandedF=f/.expansionRule;
+sums=Cases[H,Sum[_,_],{1,Infinity}];
+expandedSums=sums/.expansionRule;
+expandedDiff =D[expandedF,y/.Subscript[e_,i]->Subscript[e,42]];
+(expandedDiff/.(Transpose[{expandedSums,sums}]/.{lhs_,rhs_}:>lhs->rhs))/.(Subscript[e_,42]->Subscript[e,i])
+];
+
+HamiltonianFOC[H0_,controls0_,costates0_,states0_]:=Module[{H=H0,controls=controls0,costates=costates0,states=states0},
+Flatten[{Simplify[Solve[DSum[H,#]==0][[1,1]]]&/@controls,
+Apply[Function[{x,y},Simplify[Solve[DSum[H,x]==-D[Exp[-\[Rho] t]y,t]][[1,1]]]],#]&/@Transpose[{states,costates}]
+}]/.RuleToEquation];
+
+dotTimeDerivative:={Subscript[e_,j_]'[t]->Subscript[OverDot[e],j][t],f_'[t]->OverDot[f[t]]};
+timeSubscript:={Subscript[e_,j_][t]->Subscript[e,Row[{j,",",t}]],f_[t]->Subscript[f,t]};
 
 Hamilton::badoutput="`1` is not a valid output option, returning Full output.";
 Hamilton::badmultipliers="Incorrect number of multipliers provided. `1` expected, `2` received. Reverting to default choice of multipliers";
@@ -58,12 +77,12 @@ If[Length[multipliers]>0&&Length[multipliers]!=Length[eqs],Message[Hamilton::bad
 h=Hamiltonian[obj,eqs,multipliers];
 foc=HamiltonianFOC@@Take[h, {1, 4}];
 expObj=Exp[-\[Rho]t]obj;
-multipliersInOrder=h[[5]]/.f_[t]:>Row[{"(",f,")"}];
+multipliersInOrder=h[[5]]/.f_[t]:>Row[{"(",f[t],")"}]/.dotTimeDerivative/.timeSubscript;
 full=Style[Grid[{
 {Row[{max,Integrate[expObj,{t,0,Infinity}]}],SpanFromLeft},
-{Item[Style["s.t.",Italic],Alignment->Top],Transpose[{eqs,multipliersInOrder}]//alignedMultiple//bracket},
+{Item[Style["s.t.",Italic],Alignment->Top],Transpose[{eqs/.dotTimeDerivative/.timeSubscript,multipliersInOrder}]//alignedMultiple//bracket},
 {SpanFromAbove,Spacer[{10,10}]},
-{Item[Style["FOC",Italic],Alignment->Top],foc//alignedEquations//bracket}
+{Item[Style["FOC",Italic],Alignment->Top],foc/.dotTimeDerivative/.timeSubscript//alignedEquations//bracket}
 }, Alignment->{{Right, Left},Automatic,{{1,1}->Center}}],Larger];
 Switch[format, 
 "Hamiltonian", h[[1]],
@@ -76,9 +95,7 @@ End[]
 EndPackage[]
 
 
-Hamilton[u[Sum[Subscript[q, i][t],i]]-Sum[Subscript[c, i][Subscript[x, i][t]],i],
-{Subscript[k, i]'[t]==Subscript[x, i][t]-\[Delta] Subscript[k, i][t]
-},Output->"Hamiltonian", Multipliers-> {Subscript[\[Nu], i]}]
+
 
 
 
