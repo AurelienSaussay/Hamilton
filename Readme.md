@@ -1,6 +1,8 @@
-# Readme
+# Hamilton - Readme
 
 Hamilton is a Mathematica package to automatically derive the first order conditions (FOC) of a continuous dynamic optimization problem of the variety commonly encountered in economics.
+
+Package by Aurélien Saussay. Code released under the terms of the MIT License (see below).
 
 ## Installation
 
@@ -64,3 +66,28 @@ _Output_
 _Output_
 
 ![outindices](https://cloud.githubusercontent.com/assets/484048/5918653/813a0366-a62b-11e4-9597-bcdc8cad9768.png)
+
+
+
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Aurélien Saussay
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

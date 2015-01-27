@@ -1,5 +1,10 @@
 (* ::Package:: *)
 
+(* ::Text:: *)
+(*Hamilton Package by A. Saussay (2015)*)
+(*Released under the MIT license.*)
+
+
 BeginPackage["`Hamilton`"]
 
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
