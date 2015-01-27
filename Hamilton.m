@@ -40,18 +40,19 @@ RuleToEquation:=(lhs_->rhs_)->(lhs==rhs);
 
 buildProd[eqs_,multipliers_]:=MapAt[Sum[#,i]&, Apply[Function[{x,y},x y],#]&/@Transpose[{multipliers,eqs}], Position[multipliers,Subscript[_,_][t]]];
 
-Hamiltonian[obj0_,eqs0_,multipliers0_:{}]:=Module[{obj=obj0,eqs=eqs0,tmpMultipliers=multipliers0},
+Hamiltonian[obj0_,eqs0_,multipliers0_,controls0_,states0_]:=
+Module[{obj=obj0, eqs=eqs0, tmpMultipliers=multipliers0, tmpControls=controls0, tmpStates=states0},
 multipliers=ToTimeFunction[If[Length[tmpMultipliers]==0,
 Take[greeks,{1,Length[eqs]}],
 tmpMultipliers]];
 vars=DeleteDuplicates[Cases[Prepend[eqs,obj],Except[_'[t],f_[t]],10]];
 
-states=Cases[eqs,f_'[t]==rhs_->f[t]];
+states=If[Length[tmpStates]==0,Cases[eqs,f_'[t]==rhs_->f[t]],tmpStates];
 stateMultipliers=multipliers[[Sort[Flatten[Function[Position[eqs,#]]/@ Cases[eqs,f_'[t]==_]]]]];
 stateEqs=Cases[eqs,_'[t]==_]/.f_'[t]==rhs_->rhs;
 
 
-controls=Complement[vars, states];
+controls=If[Length[tmpControls]==0,Complement[vars, states],tmpControls];
 controlMultipliers=multipliers[[Sort[Flatten[Function[Position[eqs,#]]/@Cases[eqs,Except[_'[t]==_]]]]]];
 controlEqs=Cases[eqs,Except[_'[t]==_]]/.{lhs_==rhs_->lhs-rhs,lhs_<rhs_->rhs-lhs,lhs_<=rhs_->rhs-lhs,lhs_>rhs_->lhs-rhs,lhs_>=rhs_->lhs-rhs};
 
@@ -86,7 +87,12 @@ timeSubscript:={Subscript[e_,j_][t]->Subscript[e,Row[{j,",",t}]],f_[t]->Subscrip
 Hamilton::badoutput="`1` is not a valid output option, returning Full output.";
 Hamilton::badmultipliers="Incorrect number of multipliers provided. `1` expected, `2` received. Reverting to default choice of multipliers";
 
-Hamilton[obj0_,eqs0_,OptionsPattern[{Output->"Full",Multipliers->{}}]]:=Module[{obj=obj0,eqs=eqs0,format=OptionValue[Output],multipliers=OptionValue[Multipliers]},
+Hamilton[obj0_,eqs0_,OptionsPattern[{Output->"Full",Multipliers->{},Controls->{},States->{}}]]:=
+Module[{obj=obj0,eqs=eqs0,
+format=OptionValue[Output],
+multipliers=OptionValue[Multipliers],
+controls=OptionValue[Controls],
+states=OptionValue[States]},
 If[Length[multipliers]>0&&Length[multipliers]!=Length[eqs],Message[Hamilton::badmultipliers,Length[eqs],Length[multipliers]]];
 (*t0=Cases[u[c[t]],t,{0,Infinity}][[1]];*)
 h=Hamiltonian[obj,eqs,multipliers];
@@ -105,6 +111,8 @@ full=Style[Grid[{
 }, Alignment->{{Right, Left},Automatic,{{1,1}->Center}}],Larger];
 Switch[format, 
 "Hamiltonian", h[[1]],
+"Controls", h[[2]],
+"States", h[[4]],
 "FOC", foc,
 "Full", full,
 _, Message[Hamilton::badoutput, format];full]
