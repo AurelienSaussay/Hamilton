@@ -19,7 +19,7 @@ MakeBoxes[alignedMultiple[eqs_],fmt_]:=GridBox[Map[ToBoxes,eqs/.{{rhs_==lhs_,r__
 MakeBoxes[bracket[obj_],fmt_]:=StyleBox[RowBox[{"{",obj~ToBoxes~fmt}],SpanMaxSize->Infinity];
 
 buildCSC[eqs0_,multipliers0_]:=Module[{eqs=eqs0,multipliers=multipliers0},
-mixed=Cases[Transpose[{eqs,multipliers}],{_>= _,_}|{_<=_,_}]/.{{l_>=0,m_}-> {l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m l,"\[GreaterEqual]","0"},
+mixed=Cases[Transpose[{eqs,multipliers}],{_>= _,_}|{_<=_,_}]/.{{l_>=0,m_}-> {l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m l,"=","0"},
 {l_>=r_,m_}->{l-r,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(l-r),"=","0"},
 {l_<=r_,m_}->{r-l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(r-l),"=","0"}};
 GridBox[Map[ToBoxes,mixed,{2}],
