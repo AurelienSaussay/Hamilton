@@ -25,27 +25,42 @@ The package contains a single function, Hamilton.
 
 ## Examples
 
-Example with Full output and default multipliers:
+- Full output and default multipliers:
 
 ![insimple](https://cloud.githubusercontent.com/assets/484048/5918648/81322d80-a62b-11e4-85fe-3eddee128241.png)
+
+_Output_
+
 ![outsimple](https://cloud.githubusercontent.com/assets/484048/5918654/81478ee6-a62b-11e4-8d84-e89efa5f0241.png)
 
-Example returning only the Hamiltonian:
+- Returning only the Hamiltonian:
 
 ![insimplehamiltonian](https://cloud.githubusercontent.com/assets/484048/5918652/813933f0-a62b-11e4-858b-34e711e9350b.png)
+
+_Output_
+
 ![outsimplehamiltonian](https://cloud.githubusercontent.com/assets/484048/5918656/81493552-a62b-11e4-82b5-7a8cfd88c6d8.png)
 
-Example returning a list of the FOCs:
+- Returning a list of the FOCs:
 
 ![insimplefoc](https://cloud.githubusercontent.com/assets/484048/5918650/8136bdd2-a62b-11e4-9278-cac2d686f867.png)
+
+_Output_
+
 ![outsimplefoc](https://cloud.githubusercontent.com/assets/484048/5918657/814c582c-a62b-11e4-9a96-0c7d47cf6a8b.png)
 
-Example with custom multipliers:
+- Using custom multipliers:
 
 ![insimplecustommult](https://cloud.githubusercontent.com/assets/484048/5918651/8137684a-a62b-11e4-9c15-cbbd132823be.png)
+
+_Output_
+
 ![outsimplecustommult](https://cloud.githubusercontent.com/assets/484048/5918655/81484e30-a62b-11e4-8f18-9d869d8958de.png)
 
-Example with indices (experimental):
+- Using indices (experimental):
 
 ![inindices](https://cloud.githubusercontent.com/assets/484048/5918649/81349980-a62b-11e4-9f41-1d90d5a769d2.png)
+
+_Output_
+
 ![outindices](https://cloud.githubusercontent.com/assets/484048/5918653/813a0366-a62b-11e4-9597-bcdc8cad9768.png)
