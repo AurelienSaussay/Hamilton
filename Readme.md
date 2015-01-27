@@ -25,22 +25,27 @@ The package contains a single function, Hamilton.
 
 ## Examples
 
-Simple example with Full output and default multipliers:
+Example with Full output and default multipliers:
 
-``
+![insimple](https://cloud.githubusercontent.com/assets/484048/5918648/81322d80-a62b-11e4-85fe-3eddee128241.png)
+![outsimple](https://cloud.githubusercontent.com/assets/484048/5918654/81478ee6-a62b-11e4-8d84-e89efa5f0241.png)
 
-Hamilton[u[c[t]],
-  {F[Subscript[q, p][t], Subscript[k, c][t]] ==
-    c[t] + Subscript[i, p][t] + Subscript[i, c][t],
-   Subscript[k, p]'[t] ==
-    Subscript[i, p][t] - \[Delta] Subscript[k, p][t],
-   Subscript[k, c]'[t] ==
-    Subscript[i, c][t] - \[Delta] Subscript[k, c][t],
-   m'[t] == G Subscript[q, p][t] - \[CurlyEpsilon] m[t],
-   m[t] <=
-\!\(\*OverscriptBox[\(m\), \(_\)]\),
-   Subscript[i, p][t] >= 0,
-   Subscript[q, p][t] <= Subscript[k, p][t]
-   }, Multipliers -> {\[Lambda], \[Nu], \[Chi], \[Mu], \[Phi], \
-\[Psi], \[Beta]}] // TraditionalForm
-``
+Example returning only the Hamiltonian:
+
+![insimplehamiltonian](https://cloud.githubusercontent.com/assets/484048/5918652/813933f0-a62b-11e4-858b-34e711e9350b.png)
+![outsimplehamiltonian](https://cloud.githubusercontent.com/assets/484048/5918656/81493552-a62b-11e4-82b5-7a8cfd88c6d8.png)
+
+Example returning a list of the FOCs:
+
+![insimplefoc](https://cloud.githubusercontent.com/assets/484048/5918650/8136bdd2-a62b-11e4-9278-cac2d686f867.png)
+![outsimplefoc](https://cloud.githubusercontent.com/assets/484048/5918657/814c582c-a62b-11e4-9a96-0c7d47cf6a8b.png)
+
+Example with custom multipliers:
+
+![insimplecustommult](https://cloud.githubusercontent.com/assets/484048/5918651/8137684a-a62b-11e4-9c15-cbbd132823be.png)
+![outsimplecustommult](https://cloud.githubusercontent.com/assets/484048/5918655/81484e30-a62b-11e4-8f18-9d869d8958de.png)
+
+Example with indices (experimental):
+
+![inindices](https://cloud.githubusercontent.com/assets/484048/5918649/81349980-a62b-11e4-9f41-1d90d5a769d2.png)
+![outindices](https://cloud.githubusercontent.com/assets/484048/5918653/813a0366-a62b-11e4-9597-bcdc8cad9768.png)
