@@ -1,4 +1,4 @@
-# Hamilton - Readme
+# Hamilton
 
 Hamilton is a Mathematica package to automatically derive the first order conditions (FOC) of a continuous dynamic optimization problem of the variety commonly encountered in economics.
 
