@@ -5,6 +5,7 @@ BeginPackage["`Hamilton`"]
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
 t::usage="Time variable used by the Hamilton package";
 i::usage="Index that can be used as a subscript in the optimization problem";
+e::usage="Exponent used by the Hamilton package";
 \[Rho]::usage="Discount rate used by the Hamilton package";
 \[Rho]t::usage="Discount factor used by the Hamilton package";
 max::usage="Maximization operator used by the Hamilton package";
@@ -19,8 +20,8 @@ MakeBoxes[bracket[obj_],fmt_]:=StyleBox[RowBox[{"{",obj~ToBoxes~fmt}],SpanMaxSiz
 
 buildCSC[eqs0_,multipliers0_]:=Module[{eqs=eqs0,multipliers=multipliers0},
 mixed=Cases[Transpose[{eqs,multipliers}],{_>= _,_}|{_<=_,_}]/.{{l_>=0,m_}-> {l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m l,"\[GreaterEqual]","0"},
-{l_>=r_,m_}->{l-r,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(l-r),"\[GreaterEqual]","0"},
-{l_<=r_,m_}->{r-l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(r-l),"\[GreaterEqual]","0"}};
+{l_>=r_,m_}->{l-r,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(l-r),"=","0"},
+{l_<=r_,m_}->{r-l,"\[GreaterEqual]","0,",m,"\[GreaterEqual]",0,"and",m(r-l),"=","0"}};
 GridBox[Map[ToBoxes,mixed,{2}],
 GridBoxAlignment->{"Columns"->{Right,Center,Left,Right,Center,Left,Center,Right,Center,Left}}]//DisplayForm];
 
