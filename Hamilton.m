@@ -24,6 +24,8 @@ mixed=Cases[Transpose[{eqs,multipliers}],{_>= _,_}|{_<=_,_}]/.{{l_>=0,m_}-> {l,"
 GridBox[Map[ToBoxes,mixed,{2}],
 GridBoxAlignment->{"Columns"->{Right,Center,Left,Right,Center,Left,Center,Right,Center,Left}}]//DisplayForm];
 
+buildTC[states_,costates_]:=GridBox[Map[ToBoxes,Transpose[{states,costates}]/.{s_,cs_}->{HoldForm[Limit[e^(-\[Rho]t)cs s,t->Infinity]]//TraditionalForm,"=",0},{2}],GridBoxAlignment->{"Columns"->{Left,Center,Left}}]//DisplayForm;
+
 greeks =Complement[CharacterRange["\[Alpha]", "\[Omega]"],{"\[Delta]","\[CurlyEpsilon]","\[Zeta]","\[Theta]","\[Kappa]","\[Iota]","\[Omicron]","\[Pi]","\[Rho]","\[Sigma]","\[FinalSigma]","\[Tau]","\[Upsilon]","\[Omega]"}];
 
 ToTimeFunction[lst0_]:=Module[{lst=lst0},Function[s,s/.x_->x[t]]/@lst];
@@ -90,6 +92,8 @@ full=Style[Grid[{
 {Item[Style["s.t.",Italic],Alignment->Top],Transpose[{eqs/.dotTimeDerivative/.timeSubscript,multipliersInOrder}]//alignedMultiple//bracket},
 {SpanFromAbove,Spacer[{10,10}]},
 {Item[Style["FOC",Italic],Alignment->Top],foc/.dotTimeDerivative/.timeSubscript//alignedEquations//bracket},
+{SpanFromAbove,Spacer[{10,10}]},
+{Item[Style["TC",Italic],Alignment->Top],buildTC[h[[4]]/.dotTimeDerivative/.timeSubscript,h[[3]]/.dotTimeDerivative/.timeSubscript]//bracket},
 {SpanFromAbove,Spacer[{10,10}]},
 {Item[Style["CSC",Italic],Alignment->Top],buildCSC[eqs/.dotTimeDerivative/.timeSubscript,h[[5]]/.dotTimeDerivative/.timeSubscript]//bracket}
 }, Alignment->{{Right, Left},Automatic,{{1,1}->Center}}],Larger];
