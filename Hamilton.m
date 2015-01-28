@@ -101,7 +101,7 @@ foc=HamiltonianFOC@@Take[h, {1, 4}];
 expObj=Exp[-\[Rho]t]obj;
 multipliersInOrder=h[[5]]/.f_[t]:>Row[{"(",f[t],")"}]/.dotTimeDerivative/.timeSubscript;
 full=Style[Grid[{
-{Row[{max,Integrate[expObj,{t,0,Infinity}]}],SpanFromLeft},
+{Row[{max,Integrate[expObj/.timeSubscript,{t,0,Infinity}]}],SpanFromLeft},
 {Item[Style["s.t.",Italic],Alignment->Top],Transpose[{eqs/.dotTimeDerivative/.timeSubscript,multipliersInOrder}]//alignedMultiple//bracket},
 {SpanFromAbove,Spacer[{10,10}]},
 {Item[Style["FOC",Italic],Alignment->Top],foc/.dotTimeDerivative/.timeSubscript//alignedEquations//bracket},
