@@ -77,8 +77,9 @@ expandedDiff =D[expandedF,y/.Subscript[e_,i]->Subscript[e,42]];
 ];
 
 HamiltonianFOC[H0_,controls0_,costates0_,states0_]:=Module[{H=H0,controls=controls0,costates=costates0,states=states0},
-Flatten[{Simplify[Solve[DSum[H,#]==0][[1,1]]]&/@controls,
-Apply[Function[{x,y},Simplify[Solve[DSum[H,x]==-D[Exp[-\[Rho] t]y,t]][[1,1]]]],#]&/@Transpose[{states,costates}]
+Flatten[{
+FullSimplify[DSum[H,#]==0,t>=0]&/@controls,
+Apply[Function[{x,y},FullSimplify[DSum[H,x]==-D[Exp[-\[Rho] t]y,t],t>=0]],#]&/@Transpose[{states,costates}]
 }]/.RuleToEquation];
 
 dotTimeDerivative:={Subscript[e_,j_]'[t]->Subscript[OverDot[e],j][t],f_'[t]->OverDot[f[t]]};
