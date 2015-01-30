@@ -38,7 +38,7 @@ ToTimeFunction[lst0_]:=Module[{lst=lst0},Function[s,s/.x_->x[t]]/@lst];
 
 RuleToEquation:=(lhs_->rhs_)->(lhs==rhs);
 
-buildProd[eqs_,multipliers_]:=MapAt[Sum[#,i]&, Apply[Function[{x,y},x y],#]&/@Transpose[{multipliers,eqs}], Position[multipliers,Subscript[_,_][t]]];
+buildProd[eqs_,multipliers_]:=MapAt[Sum[#,i]&, Apply[Function[{x,y},x y],#]&/@Transpose[{multipliers,eqs}], Position[multipliers,Subscript[_,i][t]]];
 
 Hamiltonian[obj0_,eqs0_,multipliers0_,controls0_,states0_]:=
 Module[{obj=obj0, eqs=eqs0, tmpMultipliers=multipliers0, tmpControls=controls0, tmpStates=states0},
