@@ -56,6 +56,7 @@ buildProd[eqs_,multipliers_]:=MapAt[Sum[#,i]&, Apply[Function[{x,y},x y],#]&/@Tr
 
 Hamiltonian[obj0_,eqs0_,multipliers0_,controls0_,states0_]:=
 Module[{obj=obj0, eqs=eqs0, tmpMultipliers=multipliers0, tmpControls=controls0, tmpStates=states0},
+If[Length[tmpMultipliers]>0&&Length[tmpMultipliers]!=Length[eqs],Message[Hamilton::badmultipliers,Length[eqs],Length[tmpMultipliers]];tmpMultipliers={}];
 multipliers=ToTimeFunction[If[Length[tmpMultipliers]==0,
 Take[greeks,{1,Length[eqs]}],
 tmpMultipliers]];
@@ -108,7 +109,6 @@ format=OptionValue[Output],
 multipliers=OptionValue[Multipliers],
 controls=OptionValue[Controls],
 states=OptionValue[States]},
-If[Length[multipliers]>0&&Length[multipliers]!=Length[eqs],Message[Hamilton::badmultipliers,Length[eqs],Length[multipliers]]];
 (*t0=Cases[u[c[t]],t,{0,Infinity}][[1]];*)
 h=Hamiltonian[obj,eqs,multipliers,{},{}];
 foc=HamiltonianFOC@@Take[h, {1, 4}];
