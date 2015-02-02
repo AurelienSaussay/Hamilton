@@ -26,6 +26,7 @@ JoinSubscript=Subscript[e_,s__]:>ToExpression[ToString[e]<>Fold[StringJoin,"",To
 ExtractSymbols[e_]:=Union[Cases[e/.JoinSubscript,Except[E,_Symbol],{1,Infinity}]];
 
 InteractivePlot[e0_,initVals0__]:=Module[{e=e0,initVals={initVals0}},
+e=e/.((l_->r_):>r);
 allParams=Complement[ExtractSymbols[e],{t}];
 initVals=initVals/.JoinSubscript;
 With[{plots=e/.JoinSubscript,
@@ -136,14 +137,26 @@ _, Message[Hamilton::badoutput, format];full]
 
 HamiltonSolve::badoutput=Hamilton::badoutput;
 
-HamiltonSolve[prg_,initials0_,OptionsPattern[{Output->"Full",Multipliers->{},IPlot->True}]]:=
-Module[{obj=prg[[1]],eqs=prg[[2]],initials=initials0,
+applySlackness[eqs0_,mult0_,slack0_,system0_]:=Module[{eqs=eqs0,slack=slack0,mult=mult0,system=system0},
+slackCond=slack/.(l_>=r_|l_==r_|l_<=r_)->(l>=r|l==r|l<=r);
+coStates=Flatten[mult[[Position[eqs,#][[1]]]]&/@slackCond];
+conditions=Flatten[Cases[eqs, #]&/@slackCond];
+system/.(Transpose[{slack,conditions,coStates}]/.{
+{a_,a_,cs_}:>{cs->0},
+{l_[t]==r_,a_,cs_}:>{l[t]->r,l'[t]->0}})
+];
+
+HamiltonSolve[obj0_,eqs0_,initials0_,OptionsPattern[{Output->"Full",Multipliers->{},Slackness-> {}}]]:=
+Module[{obj=obj0,eqs=eqs0,initials=initials0,
 format=OptionValue[Output],
-multipliers=OptionValue[Multipliers]},
+multipliers=OptionValue[Multipliers],
+slackness=OptionValue[Slackness]},
 h=Hamiltonian[obj,eqs,multipliers,{},{}];
 foc=HamiltonianFOC@@Take[h, {1, 4}];
-eqs=eqs/.JoinSubscript;foc=foc/.JoinSubscript;
+eqs=eqs/.JoinSubscript;foc=foc/.JoinSubscript;slackness=slackness/.JoinSubscript;
 system=Join[Cases[eqs,_'[t]==_],foc,initials];
+(* Use slackness conditions to determine which costates should be equal to zero *)
+system=applySlackness[eqs,h[[5]]/.JoinSubscript,slackness,system];
 sols=DSolve[system,DeleteDuplicates[Cases[system,_[t],{1,Infinity}]/.f_'[t]->f[t]],t];
 Switch[format,
 "Full",sols,
