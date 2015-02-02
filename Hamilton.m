@@ -8,6 +8,8 @@
 BeginPackage["`Hamilton`"]
 
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
+JoinSubscript::usage="Rule to replace subscripts by equivalent symbols";
+InteractivePlot::usage="InteractivePlot[expr_,initVals0__] creates an interactive plot from expr, provided it is a funciton of time variable t. Parameters inside expr are automatically identified, and are initialised by default to 30 within a [1, 100] range. Optionally, default values can be supplied as additional parameters of the form {param, value}.";
 t::usage="Time variable used by the Hamilton package";
 i::usage="Index that can be used as a subscript in the optimization problem";
 e::usage="Exponent used by the Hamilton package";
@@ -16,6 +18,17 @@ e::usage="Exponent used by the Hamilton package";
 max::usage="Maximization operator used by the Hamilton package";
 
 Begin["`Private`"]
+
+JoinSubscript=Subscript[e_,s__]:>ToExpression[ToString[e]<>Fold[StringJoin,"",ToString/@List[s]]];
+
+ExtractSymbols[e_]:=Union[Cases[e/.JoinSubscript,Except[E,_Symbol],{1,Infinity}]];
+
+InteractivePlot[e0_,initVals0__]:=Module[{e=e0,initVals={initVals0}},
+allParams=Complement[ExtractSymbols[e],{t}];
+initVals=initVals/.JoinSubscript;
+With[{plots=e/.JoinSubscript,
+params=Sequence@@Join[Replace[initVals,{v_,ini_}->{{v,ini},ini/2,5 ini},{1}],Replace[Complement[allParams,Replace[initVals,{v_,_}->v,{1}]],s_-> {{s,30},1,100},{1}]]},
+Manipulate[Plot[plots,{t,1,100},PlotLegends->"Expressions"],params]]];
 
 MakeBoxes[alignedEquations[eqs_],fmt_]:=GridBox[Map[ToBoxes,eqs/.{rhs_==lhs_->{rhs,"=" ,lhs},rhs_<=lhs_->{rhs,"\[LessEqual]" ,lhs},rhs_>=lhs_->{rhs,"\[GreaterEqual]" ,lhs}},{2}],GridBoxAlignment->{"Columns"->{Right,Center,Left}}] ;
 
