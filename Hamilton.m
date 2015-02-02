@@ -8,6 +8,7 @@
 BeginPackage["`Hamilton`"]
 
 Hamilton::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically derives the first order conditions for a standard economics continuous dynamic optimization problem.";
+HamiltonSolve::usage="Hamilton[objective, constraints, Output -> \"Full\", Multipliers -> {}] automatically solves a standard economics continuous dynamic optimization problem for the control and state variables.";
 JoinSubscript::usage="Rule to replace subscripts by equivalent symbols";
 InteractivePlot::usage="InteractivePlot[expr_,initVals0__] creates an interactive plot from expr, provided it is a funciton of time variable t. Parameters inside expr are automatically identified, and are initialised by default to 30 within a [1, 100] range. Optionally, default values can be supplied as additional parameters of the form {param, value}.";
 t::usage="Time variable used by the Hamilton package";
@@ -132,9 +133,32 @@ Switch[format,
 "Full", full,
 _, Message[Hamilton::badoutput, format];full]
 ];
+
+HamiltonSolve::badoutput=Hamilton::badoutput;
+
+HamiltonSolve[prg_,initials0_,OptionsPattern[{Output->"Full",Multipliers->{},IPlot->True}]]:=
+Module[{obj=prg[[1]],eqs=prg[[2]],initials=initials0,
+format=OptionValue[Output],
+multipliers=OptionValue[Multipliers]},
+h=Hamiltonian[obj,eqs,multipliers,{},{}];
+foc=HamiltonianFOC@@Take[h, {1, 4}];
+eqs=eqs/.JoinSubscript;foc=foc/.JoinSubscript;
+system=Join[Cases[eqs,_'[t]==_],foc,initials];
+sols=DSolve[system,DeleteDuplicates[Cases[system,_[t],{1,Infinity}]/.f_'[t]->f[t]],t];
+Switch[format,
+"Full",sols,
+"Controls",Cases[sols[[1]],Alternatives@@Replace[h[[2]],v_-> (v->_),{1}]],
+"States",Cases[sols[[1]],Alternatives@@Replace[h[[4]],v_-> (v->_),{1}]],
+__List,Cases[sols[[1]],Alternatives@@Replace[format,v_-> (v->_),{1}]],
+_, Message[Hamilton::badoutput, format];sols]
+];
+
 End[]
 
 EndPackage[]
+
+
+
 
 
 
