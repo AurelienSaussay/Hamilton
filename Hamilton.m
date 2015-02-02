@@ -16,6 +16,7 @@ e::usage="Exponent used by the Hamilton package";
 \[Rho]::usage="Discount rate used by the Hamilton package";
 \[Rho]t::usage="Discount factor used by the Hamilton package";
 max::usage="Maximization operator used by the Hamilton package";
+tMax::usage="Last year used for charts";
 
 Begin["`Private`"]
 
@@ -27,8 +28,8 @@ InteractivePlot[e0_,initVals0__]:=Module[{e=e0,initVals={initVals0}},
 allParams=Complement[ExtractSymbols[e],{t}];
 initVals=initVals/.JoinSubscript;
 With[{plots=e/.JoinSubscript,
-params=Sequence@@Join[Replace[initVals,{v_,ini_}->{{v,ini},ini/2,5 ini},{1}],Replace[Complement[allParams,Replace[initVals,{v_,_}->v,{1}]],s_-> {{s,30},1,100},{1}]]},
-Manipulate[Plot[plots,{t,1,100},PlotLegends->"Expressions"],params]]];
+params=Sequence@@Join[{{{tMax, 40},20,100}},Replace[initVals,{v_,ini_}->{{v,ini},ini/2,5 ini},{1}],Replace[Complement[allParams,Replace[initVals,{v_,_}->v,{1}]],s_-> {{s,30},1,100},{1}]]},
+Manipulate[Plot[plots,{t,0,tMax},AxesOrigin->{0,0},PlotLegends->"Expressions"],params]]];
 
 MakeBoxes[alignedEquations[eqs_],fmt_]:=GridBox[Map[ToBoxes,eqs/.{rhs_==lhs_->{rhs,"=" ,lhs},rhs_<=lhs_->{rhs,"\[LessEqual]" ,lhs},rhs_>=lhs_->{rhs,"\[GreaterEqual]" ,lhs}},{2}],GridBoxAlignment->{"Columns"->{Right,Center,Left}}] ;
 
